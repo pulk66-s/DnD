@@ -18,6 +18,18 @@ namespace dnd::graphic
         class ClassWidget;
         class PlayerWidget;
         class SpellWidget;
+
+        namespace wplayer
+        {
+            class Inventory;
+            class Money;
+            class Weapon;
+            class Stats;
+            class SavingThrows;
+            class Spells;
+            class Skills;
+        } // namespace player
+        
     } // namespace widget
     
 } // namespace dnd::graphic
