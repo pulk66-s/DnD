@@ -42,7 +42,8 @@ namespace dnd::graphic::widget
                 std::vector<player::pclass::ClassTableLine> table = c->table();
 
                 ImGui::Text("Name: %s", c->name().c_str());
-                ImGui::Text("Description: %s", c->desc().c_str());
+                ImGui::Text("Description:");
+                ImGui::TextWrapped("%s", c->desc().c_str());
                 if (!ImGui::BeginTable("##classTable", 4, this->tableFlags)) {
                     return;
                 }

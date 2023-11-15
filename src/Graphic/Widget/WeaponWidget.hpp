@@ -18,7 +18,8 @@ namespace dnd::graphic::widget
         void display() {
             ImGui::Begin(("Weapon " + this->weapon->name()).c_str(), this->open);
             ImGui::Text("Name: %s", this->weapon->name().c_str());
-            ImGui::Text("Description: %s", this->weapon->desc().c_str());
+            ImGui::Text("Description:");
+            ImGui::TextWrapped("%s", this->weapon->desc().c_str());
             ImGui::Text("Damages: %s", this->weapon->damages()->toString().c_str());
             ImGui::End();
         }

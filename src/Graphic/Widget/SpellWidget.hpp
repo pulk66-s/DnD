@@ -18,7 +18,8 @@ namespace dnd::graphic::widget
         void display() {
             ImGui::Begin(("Spell" + this->spell->name()).c_str(), this->open);
             ImGui::Text("Name: %s", this->spell->name().c_str());
-            ImGui::Text("Description: %s", this->spell->desc().c_str());
+            ImGui::Text("Description:");
+            ImGui::TextWrapped("%s", this->spell->desc().c_str());
             ImGui::Text("Level: %d", this->spell->level());
             ImGui::End();
         }

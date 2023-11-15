@@ -58,7 +58,8 @@ namespace dnd::graphic::widget
                     strcpy(this->descBuffer, this->player->desc().c_str());
                 }
                 ImGui::Text("Name: %s", this->player->name().c_str());
-                ImGui::Text("Description: %s", this->player->desc().c_str());
+                ImGui::Text("Description:");
+                ImGui::TextWrapped("%s", this->player->desc().c_str());
                 ImGui::Text("Class: %s", this->player->pclass()->name().c_str());
                 ImGui::Text("Alignment: %s", this->player->alignment().c_str());
                 ImGui::Text("Level: %d", this->player->level());
