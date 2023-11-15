@@ -69,6 +69,7 @@ namespace dnd::graphic::widget
                 ImGui::Text("Max HP: %d", this->player->maxHp());
                 ImGui::NewLine();
                 if (!ImGui::BeginTable("All Stats", 2, ImGuiTableFlags_Resizable)) {
+                    ImGui::End();
                     return;
                 }
                 ImGui::Separator();
@@ -82,6 +83,7 @@ namespace dnd::graphic::widget
                 ImGui::SameLine();
                 ImGui::Text("CA: %d", this->player->armor()->ca());
                 if (!ImGui::BeginTable("Inventory", 2, ImGuiTableFlags_Resizable)) {
+                    ImGui::End();
                     return;
                 }
                 ImGui::TableNextColumn();
@@ -91,6 +93,7 @@ namespace dnd::graphic::widget
                 ImGui::EndTable();
                 ImGui::Separator();
                 if (!ImGui::BeginTable("To Name", 2, ImGuiTableFlags_Resizable)) {
+                    ImGui::End();
                     return;
                 }
                 ImGui::TableNextColumn();

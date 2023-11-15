@@ -10,19 +10,15 @@ namespace dnd::graphic::widget::wplayer
     class Inventory : public AWidget {
     private:
         player::Inventory *inventory;
-        bool insert;
         ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable 
                                     | ImGuiTableFlags_Borders
                                     | ImGuiTableFlags_RowBg;
     public:
-        Inventory(player::Inventory *inventory, bool insert = true)
-            : inventory(inventory), insert(insert) {};
+        Inventory(player::Inventory *inventory)
+            : inventory(inventory) {};
         void display() override {
             if (this->inventory == nullptr) {
                 return;
-            }
-            if (!this->insert) {
-                ImGui::Begin("Inventory");
             }
             ImGui::Text("Inventory");
             if (!ImGui::BeginTable("Inventory", 2, this->tableFlags)) {
@@ -39,9 +35,6 @@ namespace dnd::graphic::widget::wplayer
                 ImGui::Text("%d", elem.second);
             }
             ImGui::EndTable();
-            if (!this->insert) {
-                ImGui::End();
-            }
         }
     };
 } // namespace dnd::graphic::widget::wplayer
