@@ -10,8 +10,8 @@ NAME		=	dnd
 CC			=	g++
 # Flags
 LIBS		=	`sdl2-config --libs`
-CFLAGS		=	-W -Wall -Wextra -std=c++11 -g3
-CFLAGS		+=	-I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
+CFLAGS		=	-W -Wall -Wextra -std=c++17 -g3
+CFLAGS		+=	-I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I/usr/include/nlohmann
 CFLAGS		+=	`sdl2-config --cflags`
 
 # Sources

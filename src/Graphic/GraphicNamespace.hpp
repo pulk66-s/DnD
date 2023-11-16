@@ -20,6 +20,7 @@ namespace dnd::graphic
         class SpellWidget;
         class SkillWidget;
         class CreatePlayerWidget;
+        class LoadPlayerWidget;
 
         namespace wplayer
         {

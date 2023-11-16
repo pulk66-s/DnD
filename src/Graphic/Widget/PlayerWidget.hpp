@@ -38,9 +38,9 @@ namespace dnd::graphic::widget
 
             void displayEditWindow();
         public:
-            PlayerWidget(): PlayerWidget(new player::Player()) {};
-            PlayerWidget(player::Player *player)
-                : player(player) {
+            PlayerWidget(bool *open = nullptr): PlayerWidget(new player::Player(), open) {};
+            PlayerWidget(player::Player *player, bool *open = nullptr)
+                : player(player), AWidget(open) {
                     this->invDisplay = new wplayer::Inventory(player->getInv());
                     this->moneyDisplay = new wplayer::Money(player->coins());
                     this->weaponsDisplay = new wplayer::Weapons(player->weapons());
@@ -50,7 +50,10 @@ namespace dnd::graphic::widget
                     this->savingThrowsDisplay = new wplayer::SavingThrows(player->saving());
                 };
             void display() override {
-                ImGui::Begin("Player");
+                if (this->player == nullptr) {
+                    return;
+                }
+                ImGui::Begin(("Player" + this->player->name()).c_str(), this->open);
                 if (ImGui::Button("Edit")) {
                     this->edit = !this->edit;
                     this->levelInput = this->player->level();
@@ -79,7 +82,11 @@ namespace dnd::graphic::widget
                 this->savingThrowsDisplay->display();
                 ImGui::EndTable();
                 ImGui::Separator();
-                ImGui::Text("Armor: %s", this->player->armor()->name().c_str());
+                if (this->player->armor() != nullptr) {
+                    ImGui::Text("Armor: %s", this->player->armor()->name().c_str());
+                } else {
+                    ImGui::Text("Armor: None");
+                }
                 ImGui::SameLine();
                 ImGui::Text("CA: %d", this->player->armor()->ca());
                 if (!ImGui::BeginTable("Inventory", 2, ImGuiTableFlags_Resizable)) {

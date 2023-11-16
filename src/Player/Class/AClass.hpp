@@ -22,12 +22,12 @@ namespace dnd::player::pclass
         std::vector<ClassTableLine> _table = {};
 
         // Protected constructor to prevent instantiation of this class
+
+    public:
         AClass(
             std::string name = "Unknown",
             std::string desc = "No description"
         ) : _name(name) { };
-
-    public:
         std::string name() const { return this->_name; };
         void name(std::string name) { this->_name = name; };
         std::string desc() const { return this->_desc; };

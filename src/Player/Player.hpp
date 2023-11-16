@@ -2,6 +2,7 @@
 
 #include "PlayerNamespace.hpp"
 #include "Class/Paladin.hpp"
+#include "Class/AClass.hpp"
 #include "Inventory.hpp"
 #include "Spells/ASpell.hpp"
 #include "Spells/Fireball.hpp"
@@ -9,6 +10,7 @@
 #include "Skills/ASkill.hpp"
 #include "Skills/DivineSmite.hpp"
 #include "../Objects.hpp"
+#include "../Lib/Json.hpp"
 #include <string>
 
 namespace dnd::player
@@ -78,13 +80,13 @@ namespace dnd::player
             {WIS, {0, 0}},
             {CHA, {0, 0}}
         };
-        std::unordered_map<PlayerStats, std::pair<int, int>> _saving = {
-            {STR, {0, 0}},
-            {DEX, {0, 0}},
-            {CON, {0, 0}},
-            {INT, {0, 0}},
-            {WIS, {0, 0}},
-            {CHA, {0, 0}}
+        std::unordered_map<PlayerStats, bool> _saving = {
+            {STR, false},
+            {DEX, false},
+            {CON, false},
+            {INT, false},
+            {WIS, false},
+            {CHA, false}
         };
         std::unordered_map<PlayerMoney, int> _coins = {
             {PC, 0},
@@ -108,6 +110,28 @@ namespace dnd::player
             pclass::AClass *c = new pclass::Paladin(), 
             int level = 1
         ) : _name(name), _desc(desc), _class(c), _level(level) {};
+        Player(nlohmann::json json) {
+            this->_name = json["name"];
+            this->_desc = json["desc"];
+            if (json["class"] == "Paladin") {
+                this->_class = new pclass::Paladin();
+            } else {
+                this->_class = new pclass::AClass();
+            }
+            // this->_class = pclass::AClass::getClass(json["class"]);
+            this->_level = json["level"];
+            this->_hp = json["hp"];
+            this->_maxHp = json["maxHp"];
+            this->_proficiency = json["proficiency"];
+            this->_alignment = json["alignment"];
+            this->_coins = json["coins"];
+            this->_saving = json["saving"];
+            this->_stats = json["stats"];
+            // this->_weapons = json["weapons"];
+            // this->_armor = json["armor"];
+            // this->_skills = json["skills"];
+            // this->_spells = json["spells"];
+        }
 
         std::string name() const { return this->_name; };
         std::string desc() const { return this->_desc; };
@@ -134,11 +158,41 @@ namespace dnd::player
         void coins(std::unordered_map<PlayerMoney, int> money) { this->_coins = money; };
         std::string alignment() const { return this->_alignment; };
         void alignment(std::string align) { this->_alignment = align; };
-        std::unordered_map<PlayerStats, std::pair<int, int>> saving() const { return this->_saving; };
-        void saving(std::unordered_map<PlayerStats, std::pair<int, int>> save) { this->_saving = save; };
+        std::unordered_map<PlayerStats, bool> saving() const { return this->_saving; };
+        void saving(std::unordered_map<PlayerStats, bool> save) { this->_saving = save; };
         std::vector<skills::ASkill *> skills() const { return this->_skills; };
         void skills(std::vector<skills::ASkill *> skills) { this->_skills = skills; };
         std::vector<spells::ASpell *> spells() const { return this->_spells; };
         void spells(std::vector<spells::ASpell *> spells) { this->_spells = spells; };
+
+        void saveJson() {
+            lib::json::Json json("files/players/" + this->_name + ".json");
+
+            json.set("name", this->_name);
+            json.set("desc", this->_desc);
+            json.set("class", this->_class->name());
+            json.set("level", this->_level);
+            json.set("hp", this->_hp);
+            json.set("maxHp", this->_maxHp);
+            json.set("proficiency", this->_proficiency);
+            json.set("alignment", this->_alignment);
+            json.set("coins", this->_coins);
+            json.set("saving", this->_saving);
+            json.set("stats", this->_stats);
+            this->_weapons = {};
+            this->_armor = nullptr;
+            this->_skills = {};
+            this->_spells = {};
+            // json.set("weapons", this->_weapons);
+            // json.set("armor", this->_armor);
+            // json.set("skills", this->_skills);
+            // json.set("spells", this->_spells);
+            json.save();
+        }
+        bool exists() {
+            lib::json::Json json("files/players/" + this->_name + ".json");
+
+            return json.exists();
+        }
     };
 } // namespace dnd::player

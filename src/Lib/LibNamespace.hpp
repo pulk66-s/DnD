@@ -13,5 +13,11 @@ namespace dnd::lib
     {
         class IMGUI;
     } // namespace imgui
+
+    namespace json
+    {
+        class Json;
+    } // namespace json
+    
 } // namespace dnd::lib
 

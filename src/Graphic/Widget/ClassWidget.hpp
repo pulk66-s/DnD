@@ -21,8 +21,9 @@ namespace dnd::graphic::widget
 
         public:
             ClassWidget() {};
+            ClassWidget(bool *open) : AWidget(open) {};
             void display() override {
-                ImGui::Begin("Player classes");
+                ImGui::Begin("Player classes", this->open);
                 ImGui::Text("This is the list of all the classes available in the game.");
                 for (player::pclass::AClass *c : this->_classes) {
                     if (ImGui::Button(c->name().c_str())) {

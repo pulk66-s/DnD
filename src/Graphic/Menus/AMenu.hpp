@@ -7,28 +7,32 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 namespace dnd::graphic::menus
 {
     class AMenu : public IMenu {
     protected:
         std::string _title;
-        std::vector<widget::AWidget *> _widgets = {};
+        std::vector<std::pair<widget::AWidget *, bool *>> _widgets = {};
 
         // Private constructor to prevent instantiation
         AMenu(std::string title = "Unknown") : _title(title) {}
     public:
         void display() {
-            // std::cout << "start" << std::endl;
-            for (widget::AWidget *widget : this->_widgets) {
-                if (widget != nullptr) {
-                    // std::cout << "widget" << std::endl;
-                    widget->display();
-                } else {
-                    // std::cout << "widget is null" << std::endl;
+            for (std::pair<widget::AWidget *, bool *> widget : this->_widgets) {
+                if (widget.first != nullptr && widget.second != nullptr && *widget.second) {
+                    widget.first->display();
                 }
             }
-            // std::cout << "end" << std::endl;
+            this->_widgets.erase(std::remove_if(this->_widgets.begin(), this->_widgets.end(), [](std::pair<widget::AWidget *, bool *> widget) {
+                if (widget.first != nullptr && widget.second != nullptr && !*widget.second) {
+                    delete widget.first;
+                    delete widget.second;
+                    return true;
+                }
+                return false;
+            }), this->_widgets.end());
         }
 
         std::string title() const { return this->_title; };
@@ -39,8 +43,8 @@ namespace dnd::graphic::menus
             return os;
         };
 
-        void addWidget(widget::AWidget *widget) {
-            this->_widgets.push_back(widget);
+        void addWidget(widget::AWidget *widget, bool *open = nullptr) {
+            this->_widgets.push_back(std::make_pair(widget, open));
         }
     };
 } // namespace dnd::graphic::menus

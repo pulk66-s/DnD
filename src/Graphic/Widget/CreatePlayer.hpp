@@ -3,6 +3,7 @@
 #include "../GraphicNamespace.hpp"
 #include "AWidget.hpp"
 #include "imgui.h"
+#include "../../Lib/Json.hpp"
 #include "../../Player.hpp"
 
 namespace dnd::graphic::widget
@@ -10,6 +11,7 @@ namespace dnd::graphic::widget
     class CreatePlayerWidget : public AWidget {
     private:
         bool error = false;
+        bool success = false, playerExists = false;
         std::vector<std::string> errors = {};
         char nameBuffer[128] = {0};
         char descBuffer[2048] = {0};
@@ -32,6 +34,7 @@ namespace dnd::graphic::widget
             {player::CHA, false}
         };
         std::string alignment = "Unknown";
+        player::Player *player = nullptr;
 
         void raceForm() {
             if (ImGui::BeginMenu(("Race: " + this->choseRace).c_str())) {
@@ -114,10 +117,22 @@ namespace dnd::graphic::widget
         }
         void savingButton() {
             if (ImGui::Button("Save")) {
+                this->success = true;
                 if (!this->checkPlayer()) {
                     this->error = true;
                     return;
                 }
+                this->player = new player::Player(
+                    this->nameBuffer,
+                    this->descBuffer,
+                    new player::pclass::Paladin(),
+                    1
+                );
+
+                player->alignment(this->alignment);
+                player->stats(this->stats);
+                player->saving(this->saving);
+                this->playerExists = player->exists();
             }
         }
         void errorMessage() {
@@ -128,14 +143,13 @@ namespace dnd::graphic::widget
             ImGui::End();
         }
     public:
-        CreatePlayerWidget() {
-            std::cout << "CreatePlayerWidget()" << std::endl;
-        }
+        CreatePlayerWidget() : AWidget() {}
+        CreatePlayerWidget(bool *open) : AWidget(open) {}
         void display() override {
             if (this->error) {
                 this->errorMessage();
             }
-            ImGui::Begin("Create player");
+            ImGui::Begin("Create player", this->open);
             ImGui::InputText("Name", this->nameBuffer, IM_ARRAYSIZE(this->nameBuffer));
             ImGui::InputTextMultiline("Description", this->descBuffer, IM_ARRAYSIZE(this->descBuffer));
             this->raceForm();
@@ -144,6 +158,28 @@ namespace dnd::graphic::widget
             this->savingThrowsForm();
             this->alignmentForm();
             this->savingButton();
+            if (this->success) {
+                if (this->playerExists) {
+                    ImGui::Begin("Success", &this->success, ImGuiWindowFlags_AlwaysAutoResize);
+                    ImGui::Text("A player with this name already exists");
+                    if (ImGui::Button("Overwrite")) {
+                        this->player->saveJson();
+                        delete this->player;
+                        this->player = nullptr;
+                        this->playerExists = false;
+                    }
+                    ImGui::End();
+                } else {
+                    if (this->player != nullptr) {
+                        this->player->saveJson();
+                        delete this->player;
+                        this->player = nullptr;
+                    }
+                    ImGui::Begin("Success", &this->success, ImGuiWindowFlags_AlwaysAutoResize);
+                    ImGui::Text("Player saved");
+                    ImGui::End();
+                }
+            }
             ImGui::End();
         }
     };
