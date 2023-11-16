@@ -154,7 +154,7 @@ namespace dnd::player
         std::unordered_map<PlayerStats, std::pair<int, int>> stats() const { return this->_stats; };
         void stats(std::unordered_map<PlayerStats, std::pair<int, int>> stats) { this->_stats = stats; };
         Inventory *getInv() { return &this->inv; };
-        std::unordered_map<PlayerMoney, int> coins() const { return this->_coins; };
+        std::unordered_map<PlayerMoney, int> &coins() { return this->_coins; };
         void coins(std::unordered_map<PlayerMoney, int> money) { this->_coins = money; };
         std::string alignment() const { return this->_alignment; };
         void alignment(std::string align) { this->_alignment = align; };

@@ -32,6 +32,7 @@ namespace dnd::graphic
             class SavingThrows;
             class Spells;
             class Skills;
+            class Actions;
         } // namespace player
         
     } // namespace widget
