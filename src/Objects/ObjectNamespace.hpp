@@ -9,6 +9,12 @@ namespace dnd::objects
         class Armor;
         class StandardSword;
         class WarHammer;
+        class ItemFactory;
+
+        class Food;
+        namespace food {
+            class Cheese;
+        }
     } // namespace items
     
 } // namespace dnd::objects

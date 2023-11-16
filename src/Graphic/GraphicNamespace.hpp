@@ -21,6 +21,7 @@ namespace dnd::graphic
         class SkillWidget;
         class CreatePlayerWidget;
         class LoadPlayerWidget;
+        class ItemWidget;
 
         namespace wplayer
         {
