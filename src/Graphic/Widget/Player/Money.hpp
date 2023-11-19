@@ -9,14 +9,14 @@ namespace dnd::graphic::widget::wplayer
 {
     class Money : public AWidget {
     private:
-        std::unordered_map<player::PlayerMoney, int> &money;
-        std::unordered_map<player::PlayerMoney, int> editMoney = {};
+        player::data::Money &money;
+        player::data::Money editMoney = {};
         ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable 
                                     | ImGuiTableFlags_Borders
                                     | ImGuiTableFlags_RowBg;
 
     public:
-        Money(std::unordered_map<player::PlayerMoney, int> &money)
+        Money(player::data::Money &money)
             : money(money) {};
         void display() override {
             ImGui::Text("Money");
@@ -26,10 +26,10 @@ namespace dnd::graphic::widget::wplayer
             ImGui::TableSetupColumn("Type");
             ImGui::TableSetupColumn("Qte");
             ImGui::TableHeadersRow();
-            for (std::pair<player::PlayerMoney, int> c : this->money) {
+            for (std::pair<player::data::Money::MoneyType, int> c : this->money.get()) {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
-                ImGui::Text("%s", player::toString(c.first).c_str());
+                ImGui::Text("%s", player::data::Money::toString(c.first).c_str());
                 ImGui::TableNextColumn();
                 ImGui::Text("%d", c.second);
             }

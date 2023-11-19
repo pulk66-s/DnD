@@ -17,22 +17,7 @@ namespace dnd::graphic::widget
         char descBuffer[2048] = {0};
         std::string choseRace = "Unknown";
         std::string chosenClass = "Unknown";
-        std::unordered_map<player::PlayerStats, std::pair<int, int>> stats = {
-            {player::STR, {0, 0}},
-            {player::DEX, {0, 0}},
-            {player::CON, {0, 0}},
-            {player::INT, {0, 0}},
-            {player::WIS, {0, 0}},
-            {player::CHA, {0, 0}}
-        };
-        std::unordered_map<player::PlayerStats, bool> saving = {
-            {player::STR, false},
-            {player::DEX, false},
-            {player::CON, false},
-            {player::INT, false},
-            {player::WIS, false},
-            {player::CHA, false}
-        };
+        player::data::DiceStats stats;
         std::string alignment = "Unknown";
         player::Player *player = nullptr;
 
@@ -60,8 +45,8 @@ namespace dnd::graphic::widget
         }
         void statsForm() {
             if (ImGui::BeginMenu("Stats")) {
-                for (auto &stat : this->stats) {
-                    if (ImGui::BeginMenu(player::toString(stat.first).c_str())) {
+                for (auto &stat : this->stats.get()) {
+                    if (ImGui::BeginMenu(player::data::DiceStats::toString(stat.first).c_str())) {
                         ImGui::InputInt("Value", &stat.second.first);
                         ImGui::InputInt("Modifier", &stat.second.second);
                         ImGui::EndMenu();
@@ -72,8 +57,8 @@ namespace dnd::graphic::widget
         }
         void savingThrowsForm() {
             if (ImGui::BeginMenu("Saving throws")) {
-                for (auto &save : this->saving) {
-                    ImGui::Checkbox(player::toString(save.first).c_str(), &save.second);
+                for (auto &save : this->stats.getSaving()) {
+                    ImGui::Checkbox(player::data::DiceStats::toString(save.first).c_str(), &save.second);
                 }
                 ImGui::EndMenu();
             }
@@ -125,13 +110,12 @@ namespace dnd::graphic::widget
                 this->player = new player::Player(
                     this->nameBuffer,
                     this->descBuffer,
-                    new player::pclass::Paladin(),
-                    1
+                    new player::pclass::Paladin()
                 );
 
-                player->alignment(this->alignment);
-                player->stats(this->stats);
-                player->saving(this->saving);
+                player->stats().alignment(this->alignment);
+                player->diceStats().set(this->stats.get());
+                player->diceStats().setSaving(this->stats.getSaving());
                 this->playerExists = player->exists();
             }
         }

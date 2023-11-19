@@ -12,12 +12,12 @@ namespace dnd::graphic::widget::wplayer
     class Spells : public AWidget {
     private:
         std::vector<std::pair<SpellWidget *, bool *>> spellWidgets = {};
-        std::vector<player::spells::ASpell *> spells;
+        player::data::Skills skills;
         ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable 
                                     | ImGuiTableFlags_Borders
                                     | ImGuiTableFlags_RowBg;
     public:
-        Spells(std::vector<player::spells::ASpell *> spells): spells(spells) {};
+        Spells(player::data::Skills skills): skills(skills) {};
         void display() override {
             ImGui::Text("Spells");
             if (!ImGui::BeginTable("Spells", 2, this->tableFlags)) {
@@ -26,7 +26,7 @@ namespace dnd::graphic::widget::wplayer
             ImGui::TableSetupColumn("Name");
             ImGui::TableSetupColumn("Level");
             ImGui::TableHeadersRow();
-            for (player::spells::ASpell *s : this->spells) {
+            for (player::spells::ASpell *s : this->skills.spells()) {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
                 if (ImGui::Selectable(s->name().c_str())) {

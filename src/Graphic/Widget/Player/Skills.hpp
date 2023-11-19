@@ -11,13 +11,13 @@ namespace dnd::graphic::widget::wplayer
 {
     class Skills : public AWidget {
     private:
-        std::vector<player::skills::ASkill *> skills;
+        player::data::Skills skills;
         std::vector<std::pair<SkillWidget *, bool *>> skillWidgets = {};
         ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable 
                                     | ImGuiTableFlags_Borders
                                     | ImGuiTableFlags_RowBg;
     public:
-        Skills(std::vector<player::skills::ASkill *> skills): skills(skills) {};
+        Skills(player::data::Skills skills): skills(skills) {};
         void display() override {
             ImGui::Text("Skills");
             if (!ImGui::BeginTable("Skills", 2, this->tableFlags)) {
@@ -26,7 +26,7 @@ namespace dnd::graphic::widget::wplayer
             ImGui::TableSetupColumn("Name");
             ImGui::TableSetupColumn("Description");
             ImGui::TableHeadersRow();
-            for (player::skills::ASkill *s : this->skills) {
+            for (player::skills::ASkill *s : this->skills.skills()) {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
                 if (ImGui::Selectable(s->name().c_str())) {

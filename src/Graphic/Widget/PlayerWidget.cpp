@@ -10,7 +10,7 @@ namespace dnd::graphic::widget
         if (ImGui::Button("Save")) {
             this->player->name(this->nameBuffer);
             this->player->desc(this->descBuffer);
-            this->player->level(this->levelInput);
+            this->player->stats().level(this->levelInput);
             this->edit = false;
         }
         ImGui::End();

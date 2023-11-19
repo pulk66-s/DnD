@@ -2,6 +2,7 @@
 
 #include "../../GraphicNamespace.hpp"
 #include "../AWidget.hpp"
+#include "../WeaponWidget.hpp"
 #include <vector>
 #include "../../../Player.hpp"
 #include "imgui.h"
@@ -10,13 +11,13 @@ namespace dnd::graphic::widget::wplayer
 {
     class Weapons : public AWidget {
     private:
-        std::vector<objects::items::Weapon *> weapons;
+        player::data::Equipment equipments;
         std::vector<std::pair<WeaponWidget *, bool *>> weaponWidgets = {};
         ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable 
                                     | ImGuiTableFlags_Borders
                                     | ImGuiTableFlags_RowBg;
     public:
-        Weapons(std::vector<objects::items::Weapon *> weapons): weapons(weapons) {};
+        Weapons(player::data::Equipment equipments): equipments(equipments) {};
         void display() override {
             ImGui::Text("Weapons");
             if (!ImGui::BeginTable("Weapons", 2, this->tableFlags)) {
@@ -25,7 +26,7 @@ namespace dnd::graphic::widget::wplayer
             ImGui::TableSetupColumn("Name");
             ImGui::TableSetupColumn("Damages");
             ImGui::TableHeadersRow();
-            for (objects::items::Weapon *w : this->weapons) {
+            for (objects::items::Weapon *w : this->equipments.weapons()) {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
                 if (ImGui::Selectable(w->name().c_str())) {

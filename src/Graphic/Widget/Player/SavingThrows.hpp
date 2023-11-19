@@ -10,12 +10,12 @@ namespace dnd::graphic::widget::wplayer
 {
     class SavingThrows : public AWidget {
     private:
-        std::unordered_map<player::PlayerStats, bool> saving;
+        player::data::DiceStats diceStats;
         ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable 
                                     | ImGuiTableFlags_Borders
                                     | ImGuiTableFlags_RowBg;
     public:
-        SavingThrows(std::unordered_map<player::PlayerStats, bool> saving): saving(saving) {};
+        SavingThrows(player::data::DiceStats diceStats): diceStats(diceStats) {};
         void display() override {
             ImGui::Text("Saving Throws");
             if (!ImGui::BeginTable("Saving Throws", 2, this->tableFlags)) {
@@ -24,10 +24,10 @@ namespace dnd::graphic::widget::wplayer
             ImGui::TableSetupColumn("Name");
             ImGui::TableSetupColumn("Proficiency");
             ImGui::TableHeadersRow();
-            for (std::pair<player::PlayerStats, bool> i : this->saving) {
+            for (std::pair<player::data::DiceStats::PlayerStats, bool> i : this->diceStats.getSaving()) {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
-                ImGui::Text("%s", player::toString(i.first).c_str());
+                ImGui::Text("%s", player::data::DiceStats::toString(i.first).c_str());
                 ImGui::TableNextColumn();
                 ImGui::Text("%d", i.second);
             }

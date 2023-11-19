@@ -10,7 +10,7 @@
 #include "Player/Weapons.hpp"
 #include "Player/Spells.hpp"
 #include "Player/Skills.hpp"
-#include "Player/Stats.hpp"
+#include "Player/DiceStats.hpp"
 #include "Player/Actions.hpp"
 #include "Player/SavingThrows.hpp"
 #include "../../Player.hpp"
@@ -34,7 +34,7 @@ namespace dnd::graphic::widget
             wplayer::Weapons *weaponsDisplay;
             wplayer::Spells *spellsDisplay;
             wplayer::Skills *skillsDisplay;
-            wplayer::Stats *statsDisplay;
+            wplayer::DiceStats *statsDisplay;
             wplayer::SavingThrows *savingThrowsDisplay;
             wplayer::Actions *actionsDisplay;
 
@@ -43,13 +43,13 @@ namespace dnd::graphic::widget
             PlayerWidget(bool *open = nullptr): PlayerWidget(new player::Player(), open) {};
             PlayerWidget(player::Player *player, bool *open = nullptr)
                 : player(player), AWidget(open) {
-                    this->invDisplay = new wplayer::Inventory(player->getInv());
-                    this->moneyDisplay = new wplayer::Money(player->coins());
-                    this->weaponsDisplay = new wplayer::Weapons(player->weapons());
-                    this->spellsDisplay = new wplayer::Spells(player->spells());
+                    this->invDisplay = new wplayer::Inventory(player->inv());
+                    this->moneyDisplay = new wplayer::Money(player->money());
+                    this->weaponsDisplay = new wplayer::Weapons(player->equipment());
+                    this->spellsDisplay = new wplayer::Spells(player->skills());
                     this->skillsDisplay = new wplayer::Skills(player->skills());
-                    this->statsDisplay = new wplayer::Stats(player->stats());
-                    this->savingThrowsDisplay = new wplayer::SavingThrows(player->saving());
+                    this->statsDisplay = new wplayer::DiceStats(player->diceStats());
+                    this->savingThrowsDisplay = new wplayer::SavingThrows(player->diceStats());
                     this->actionsDisplay = new wplayer::Actions(player);
                 };
             void display() override {
@@ -67,7 +67,7 @@ namespace dnd::graphic::widget
                 ImGui::TableNextColumn();
                 if (ImGui::Button("Edit")) {
                     this->edit = !this->edit;
-                    this->levelInput = this->player->level();
+                    this->levelInput = this->player->stats().level();
                     strcpy(this->nameBuffer, this->player->name().c_str());
                     strcpy(this->descBuffer, this->player->desc().c_str());
                 }
@@ -75,12 +75,12 @@ namespace dnd::graphic::widget
                 ImGui::Text("Description:");
                 ImGui::TextWrapped("%s", this->player->desc().c_str());
                 ImGui::Text("Class: %s", this->player->pclass()->name().c_str());
-                ImGui::Text("Alignment: %s", this->player->alignment().c_str());
-                ImGui::Text("Level: %d", this->player->level());
-                ImGui::Text("Proficiency: %d", this->player->proficiency());
-                ImGui::Text("HP: %d", this->player->hp());
+                ImGui::Text("Alignment: %s", this->player->stats().alignment().c_str());
+                ImGui::Text("Level: %d", this->player->stats().level());
+                ImGui::Text("Proficiency: %d", this->player->stats().proficiency());
+                ImGui::Text("HP: %d", this->player->stats().hp());
                 ImGui::SameLine();
-                ImGui::Text("Max HP: %d", this->player->maxHp());
+                ImGui::Text("Max HP: %d", this->player->stats().maxHp());
                 ImGui::TableNextColumn();
                 this->actionsDisplay->display();
                 ImGui::EndTable();
@@ -96,13 +96,13 @@ namespace dnd::graphic::widget
                 this->savingThrowsDisplay->display();
                 ImGui::EndTable();
                 ImGui::Separator();
-                if (this->player->armor() != nullptr) {
-                    ImGui::Text("Armor: %s", this->player->armor()->name().c_str());
+                if (this->player->equipment().armor() != nullptr) {
+                    ImGui::Text("Armor: %s", this->player->equipment().armor()->name().c_str());
                 } else {
                     ImGui::Text("Armor: None");
                 }
                 ImGui::SameLine();
-                ImGui::Text("CA: %d", this->player->armor()->ca());
+                ImGui::Text("CA: %d", this->player->equipment().armor()->ca());
                 if (!ImGui::BeginTable("Inventory", 2, ImGuiTableFlags_Resizable)) {
                     ImGui::End();
                     return;

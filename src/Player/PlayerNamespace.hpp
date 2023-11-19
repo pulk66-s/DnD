@@ -24,5 +24,11 @@ namespace dnd::player
         class ASkill;
         class DivineSmite;
     } // namespace skills
-    
+    namespace data {
+        class Money;
+        class DiceStats;
+        class Stats;
+        class Skills;
+        class Equipment;
+    }
 } // namespace dnd::user

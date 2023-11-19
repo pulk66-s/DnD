@@ -9,6 +9,7 @@ namespace dnd::objects::items
     class Weapon : public AItem {
     protected:
         player::Dice *_damages;
+        int maxWeapons = 4;
     public:
         Weapon(
             std::string name = "Unknown",
