@@ -30,5 +30,6 @@ namespace dnd::player
         class Stats;
         class Skills;
         class Equipment;
+        class Spells;
     }
 } // namespace dnd::user

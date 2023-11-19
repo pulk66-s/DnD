@@ -12,21 +12,50 @@ namespace dnd::graphic::widget::wplayer
     class Spells : public AWidget {
     private:
         std::vector<std::pair<SpellWidget *, bool *>> spellWidgets = {};
-        player::data::Skills skills;
+        player::data::Spells spells;
         ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable 
                                     | ImGuiTableFlags_Borders
                                     | ImGuiTableFlags_RowBg;
+        bool *limitOpen = new bool(false);
+
+        void displaySpellsLimit() {
+            if (!ImGui::Begin("Spells Limit", this->limitOpen)) {
+                return;
+            }
+            if (ImGui::BeginTable("Spells Limit", 3, this->tableFlags)) {
+                ImGui::TableSetupColumn("Level");
+                ImGui::TableSetupColumn("Limit");
+                ImGui::TableSetupColumn("Casted");
+                ImGui::TableHeadersRow();
+                for (int i = 0; i < 10; i++) {
+                    int l = this->spells.limit(i);
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%d", i);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%d", l);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%d", this->spells.casted(i));
+                }
+                ImGui::EndTable();
+            }
+            ImGui::End();
+        }                         
     public:
-        Spells(player::data::Skills skills): skills(skills) {};
+        Spells(player::data::Spells spells): spells(spells) {};
         void display() override {
             ImGui::Text("Spells");
+            ImGui::SameLine();
+            if (ImGui::Button("Spells Limit")) {
+                *(this->limitOpen) = !*(this->limitOpen);
+            }
             if (!ImGui::BeginTable("Spells", 2, this->tableFlags)) {
                 return;
             }
             ImGui::TableSetupColumn("Name");
             ImGui::TableSetupColumn("Level");
             ImGui::TableHeadersRow();
-            for (player::spells::ASpell *s : this->skills.spells()) {
+            for (player::spells::ASpell *s : this->spells.list()) {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
                 if (ImGui::Selectable(s->name().c_str())) {
@@ -48,6 +77,9 @@ namespace dnd::graphic::widget::wplayer
                 if (*(i.second)) {
                     i.first->display();
                 }
+            }
+            if (*this->limitOpen) {
+                this->displaySpellsLimit();
             }
         }
     };

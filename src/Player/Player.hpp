@@ -11,6 +11,7 @@
 #include "PlayerData/DiceStats.hpp"
 #include "PlayerData/Equipment.hpp"
 #include "PlayerData/Skills.hpp"
+#include "PlayerData/Spells.hpp"
 #include "PlayerData/Stats.hpp"
 
 namespace dnd::player
@@ -25,6 +26,7 @@ namespace dnd::player
         data::DiceStats playerDiceStats;
         data::Equipment playerEquipment;
         data::Skills playerSkills;
+        data::Spells playerSpells;
         data::Stats playerStats;
     public:
         Player(
@@ -67,6 +69,7 @@ namespace dnd::player
         data::Skills skills() { return this->playerSkills; };
         data::Equipment equipment() { return this->playerEquipment; };
         data::Stats stats() { return this->playerStats; };
+        data::Spells spells() { return this->playerSpells; };
 
         void saveJson() {
             lib::json::Json json("files/players/" + this->_name + ".json");

@@ -46,7 +46,7 @@ namespace dnd::graphic::widget
                     this->invDisplay = new wplayer::Inventory(player->inv());
                     this->moneyDisplay = new wplayer::Money(player->money());
                     this->weaponsDisplay = new wplayer::Weapons(player->equipment());
-                    this->spellsDisplay = new wplayer::Spells(player->skills());
+                    this->spellsDisplay = new wplayer::Spells(player->spells());
                     this->skillsDisplay = new wplayer::Skills(player->skills());
                     this->statsDisplay = new wplayer::DiceStats(player->diceStats());
                     this->savingThrowsDisplay = new wplayer::SavingThrows(player->diceStats());

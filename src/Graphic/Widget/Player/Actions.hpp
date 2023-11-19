@@ -38,7 +38,7 @@ namespace dnd::graphic::widget::wplayer
         };
 
         void displayAttack() {
-            if (!ImGui::Begin("Attack", this->attackOpen)) {
+            if (!ImGui::Begin((this->player->name() + "Attack").c_str(), this->attackOpen)) {
                 return;
             }
             ImGui::Text("Choose a weapon to attack with:");
@@ -56,7 +56,7 @@ namespace dnd::graphic::widget::wplayer
                 }
             }
             if (*this->attackConfirmation) {
-                if (ImGui::Begin("Attack confirmation", this->attackConfirmation)) {
+                if (ImGui::Begin((this->player->name() + "Attack confirmation").c_str(), this->attackConfirmation)) {
                     ImGui::Text("Attack confirmation");
                     ImGui::TextWrapped(
                         "Are you sure you want to attack with the weapon: '%s' tha can deal %s damages ?", 
@@ -86,7 +86,7 @@ namespace dnd::graphic::widget::wplayer
             }
         }
         void displayTakeDamages() {
-            ImGui::Begin("Take Damage", this->takeDamageOpen);
+            ImGui::Begin((this->player->name() + "Take Damage").c_str(), this->takeDamageOpen);
             ImGui::Text("How many damages do you want to take ?");
             ImGui::InputInt("Damages", this->takeDamage);
             if (ImGui::Button("Take")) {
@@ -95,7 +95,7 @@ namespace dnd::graphic::widget::wplayer
             ImGui::End();
         }
         void displaySpendMoney() {
-            if (!ImGui::Begin("Spend Money", this->spendMoneyOpen)) {
+            if (!ImGui::Begin((this->player->name() + "Spend Money").c_str(), this->spendMoneyOpen)) {
                 return;
             }
             ImGui::Text("How much money do you want to spend ?");
@@ -106,7 +106,7 @@ namespace dnd::graphic::widget::wplayer
                 *this->spendMoneyConfirmation = true;
             }
             if (*this->spendMoneyConfirmation) {
-                if (ImGui::Begin("Spend money confirmation", this->spendMoneyConfirmation)) {
+                if (ImGui::Begin((this->player->name() + "Spend money confirmation").c_str(), this->spendMoneyConfirmation)) {
                     ImGui::Text("Spend money confirmation");
                     ImGui::TextWrapped("Do you want to spend:");
                     for (std::pair<player::data::Money::MoneyType, int *> p : this->spendMoney) {
@@ -128,7 +128,7 @@ namespace dnd::graphic::widget::wplayer
             ImGui::End();
         }
         void displaySavingThrows() {
-            if (!ImGui::Begin("Throw saving dice", this->savingThrowsOpen)) {
+            if (!ImGui::Begin((this->player->name() + "Throw saving dice").c_str(), this->savingThrowsOpen)) {
                 return;
             }
             ImGui::Text("Select your saving dice");
@@ -145,7 +145,7 @@ namespace dnd::graphic::widget::wplayer
             ImGui::End();
         }
         void displaySavingThrowsConfirmation() {
-            if (!ImGui::Begin("Throw saving dice Confirmation", this->savingThrowsOpenConfirmation)) {
+            if (!ImGui::Begin((this->player->name() + "Throw saving dice Confirmation").c_str(), this->savingThrowsOpenConfirmation)) {
                 return;
             }
             ImGui::TextWrapped("Are you sure you want to launch a saving throw ?");
@@ -167,7 +167,7 @@ namespace dnd::graphic::widget::wplayer
             ImGui::End();
         }
         void displayStatDice() {
-            if (!ImGui::Begin("Throw stat dice", this->savingThrowsOpen)) {
+            if (!ImGui::Begin((this->player->name() + "Throw stat dice").c_str(), this->statDiceOpen)) {
                 return;
             }
             ImGui::Text("Select your stat dice");
@@ -184,7 +184,7 @@ namespace dnd::graphic::widget::wplayer
             ImGui::End();
         }
         void displayStatDiceConfirmation() {
-            if (!ImGui::Begin("Throw stat dice Confirmation", this->savingThrowsOpenConfirmation)) {
+            if (!ImGui::Begin((this->player->name() + "Throw stat dice Confirmation").c_str(), this->statDiceOpenConfirmation)) {
                 return;
             }
             ImGui::TextWrapped("Are you sure you want to launch a stat dice ?");
