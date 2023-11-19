@@ -6,6 +6,7 @@
 #include "imgui.h"
 #include <optional>
 #include <algorithm>
+#include <optional>
 
 namespace dnd::graphic::widget::wplayer
 {
@@ -15,9 +16,17 @@ namespace dnd::graphic::widget::wplayer
         objects::items::Weapon *weapon = nullptr;
         bool *attackOpen = new bool(false);
         bool *attackConfirmation = new bool(false);
+        bool *savingThrowsOpen = new bool(false);
+        bool *statDiceOpen = new bool(false);
+        bool *statDiceOpenConfirmation = new bool(false);
+        bool *savingThrowsOpenConfirmation = new bool(false);
+        std::optional<int> savingResult = std::nullopt;
+        std::optional<int> statResult = std::nullopt;
         bool *takeDamageOpen = new bool(false);
         bool *spendMoneyOpen = new bool(false);
         bool *spendMoneyConfirmation = new bool(false);
+        player::data::DiceStats::PlayerStats savingStat = player::data::DiceStats::STR;
+        player::data::DiceStats::PlayerStats diceStat = player::data::DiceStats::STR;
         int *takeDamage = new int(0);
         std::optional<int> attackDamages = std::nullopt;
         std::unordered_map<player::data::Money::MoneyType, int *> spendMoney = {
@@ -118,6 +127,80 @@ namespace dnd::graphic::widget::wplayer
             }
             ImGui::End();
         }
+        void displaySavingThrows() {
+            if (!ImGui::Begin("Throw saving dice", this->savingThrowsOpen)) {
+                return;
+            }
+            ImGui::Text("Select your saving dice");
+            if (ImGui::BeginMenu("Category")) {
+                for (int i = 0; i < 6; i++) {
+                    if (ImGui::MenuItem(player::data::DiceStats::toString((player::data::DiceStats::PlayerStats)i).c_str())) {
+                        this->savingStat = (player::data::DiceStats::PlayerStats)i;
+                        *this->savingThrowsOpenConfirmation = true;
+                        this->savingResult = std::nullopt;
+                    }
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::End();
+        }
+        void displaySavingThrowsConfirmation() {
+            if (!ImGui::Begin("Throw saving dice Confirmation", this->savingThrowsOpenConfirmation)) {
+                return;
+            }
+            ImGui::TextWrapped("Are you sure you want to launch a saving throw ?");
+            ImGui::Text(("Dice Type: " + player::data::DiceStats::toString(this->savingStat)).c_str());
+            bool diceSaving = this->player->diceStats().getSaving(this->savingStat);
+            player::Dice dice(1, 20, 0);
+            if (diceSaving) {
+                dice.bonus(this->player->stats().proficiency());
+            }
+            ImGui::Text(("Dice: " + dice.toString()).c_str());
+            if (ImGui::Button("Yes")) {
+                if (!this->savingResult.has_value()) {
+                    this->savingResult = std::make_optional(dice.roll());
+                }
+            }
+            if (this->savingResult.has_value()) {
+                ImGui::Text("You rolled %d", this->savingResult.value());
+            }
+            ImGui::End();
+        }
+        void displayStatDice() {
+            if (!ImGui::Begin("Throw stat dice", this->savingThrowsOpen)) {
+                return;
+            }
+            ImGui::Text("Select your stat dice");
+            if (ImGui::BeginMenu("Category")) {
+                for (int i = 0; i < 6; i++) {
+                    if (ImGui::MenuItem(player::data::DiceStats::toString((player::data::DiceStats::PlayerStats)i).c_str())) {
+                        this->diceStat = (player::data::DiceStats::PlayerStats)i;
+                        *this->statDiceOpenConfirmation = true;
+                        this->statResult = std::nullopt;
+                    }
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::End();
+        }
+        void displayStatDiceConfirmation() {
+            if (!ImGui::Begin("Throw stat dice Confirmation", this->savingThrowsOpenConfirmation)) {
+                return;
+            }
+            ImGui::TextWrapped("Are you sure you want to launch a stat dice ?");
+            ImGui::Text(("Dice Type: " + player::data::DiceStats::toString(this->diceStat)).c_str());
+            player::Dice dice(1, 20, this->player->diceStats().getBonus(this->diceStat));
+            ImGui::Text(("Dice: " + dice.toString()).c_str());
+            if (ImGui::Button("Yes")) {
+                if (!this->statResult.has_value()) {
+                    this->statResult = std::make_optional(dice.roll());
+                }
+            }
+            if (this->statResult.has_value()) {
+                ImGui::Text("You rolled %d", this->statResult.value());
+            }
+            ImGui::End();
+        }
     public:
         Actions(player::Player *player): player(player) {};
         void display() override {
@@ -130,6 +213,12 @@ namespace dnd::graphic::widget::wplayer
             if (ImGui::Button("Spend Money")) {
                 *this->spendMoneyOpen = !*this->spendMoneyOpen;
             }
+            if (ImGui::Button("Saving Throws")) {
+                *this->savingThrowsOpen = !*this->savingThrowsOpen;
+            }
+            if (ImGui::Button("Stat Dice")) {
+                *this->statDiceOpen = !*this->statDiceOpen;
+            }
             if (*this->attackOpen) {
                 this->displayAttack();
             }
@@ -138,6 +227,18 @@ namespace dnd::graphic::widget::wplayer
             }
             if (*this->spendMoneyOpen) {
                 this->displaySpendMoney();
+            }
+            if (*this->savingThrowsOpen) {
+                this->displaySavingThrows();
+            }
+            if (*this->savingThrowsOpenConfirmation) {
+                this->displaySavingThrowsConfirmation();
+            }
+            if (*this->statDiceOpen) {
+                this->displayStatDice();
+            }
+            if (*statDiceOpenConfirmation) {
+                this->displayStatDiceConfirmation();
             }
         }
     };

@@ -39,6 +39,9 @@ namespace dnd::player::data
         int get(PlayerStats stat) {
             return _stats[stat].first;
         }
+        int getBonus(PlayerStats stat) {
+            return _stats[stat].second;
+        }
         std::unordered_map<PlayerStats, std::pair<int, int>> get() {
             return _stats;
         }
